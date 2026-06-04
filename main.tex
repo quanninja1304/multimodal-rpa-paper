@@ -1,0 +1,51 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows.meta,positioning}
+\usepackage{placeins}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Multimodal Artificial Intelligence in Enterprise Robotic Process Automation\\
+}
+ 
+\author{\IEEEauthorblockN{1\textsuperscript{st} Nguyen Dai Quan}
+\IEEEauthorblockA{\textit{Mathematical Economics} \\
+\textit{National Economics University}\\
+Hanoi, Vietnam \\
+11220586@st.neu.edu.vn}
+}
+\maketitle
+
+\begin{abstract}
+Digital transformation in enterprises has accelerated the adoption of Cognitive Robotic Process Automation (RPA) capable of processing unstructured and multimodal inputs such as documents, images, and speech. However, deploying end-to-end Large Language Models (LLMs) in high-frequency enterprise workflows introduces significant challenges related to prediction accuracy, computational latency, and operational cost. This paper proposes a modular two-stage framework for multimodal information extraction and entity resolution designed for domain-specific enterprise environments. The architecture separates signal interpretation from semantic reasoning. In the first stage, specialized perception modules convert multimodal inputs into textual representations. In the second stage, a unified Large Language Model performs zero-shot structured entity extraction from the transcribed content. To resolve extracted entities against large enterprise databases, the system employs a heterogeneous approach: merchant identities are resolved via robust lexical normalization and token-set fuzzy string matching, while complex product catalogs are mapped utilizing a hybrid retrieval mechanism that combines dense semantic representations from Sentence-BERT with sparse lexical matching via BM25. Experimental evaluation indicates that the proposed modular architecture provides an efficient, accurate, and scalable approach for integrating noisy multimodal inputs into structured enterprise data pipelines, reducing computational overhead while maintaining high extraction fidelity.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Multimodal Information Extraction, Robotic Process Automation, Large Language Models, Hybrid Retrieval
+\end{IEEEkeywords}
+
+\input{sections/1_introduction}
+\input{sections/2_related_work}
+\input{sections/3_methodology}
+\input{sections/4_experiments}
+\input{sections/5_conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,103 @@
+% =============================================================
+%  SECTION 2 — RELATED WORK  (revised)
+%  Reduction target: ~40% shorter than original
+%  Structure: 4 subsections, each following the pattern:
+%    what prior work did → remaining limitation → how this work differs
+%  All textbook background on CNNs, transformers, sampling removed.
+%  "Macro-context" macro-economics paragraphs deleted.
+% =============================================================
+\section{Related Work}
+
+\subsection{Document Understanding and OCR-Based Information Extraction}
+
+Layout-aware document understanding has advanced considerably with the
+introduction of LayoutLM~\cite{xu2020layoutlm} and its successors, which
+jointly encode text tokens and their two-dimensional bounding-box coordinates
+using transformer self-attention. These models achieve strong performance on
+form understanding and document classification benchmarks, but require
+fine-tuning on annotated data in the target layout domain. End-to-end
+approaches such as Donut~\cite{kim2022ocr} eliminate the OCR stage entirely
+by learning to decode structured outputs directly from document images;
+however, they are computationally expensive at inference time and require
+substantial task-specific training data.
+
+For enterprise RPA, where document formats vary across suppliers and input
+quality fluctuates between high-resolution scans and low-quality phone
+photographs, both categories of model face practical constraints. Our pipeline
+delegates visual understanding to a cloud OCR service with layout analysis
+and isolates the semantic extraction step in a downstream LLM, decoupling
+visual-quality sensitivity from extraction logic without requiring fine-tuning.
+
+\subsection{Vietnamese Automatic Speech Recognition}
+
+Vietnamese presents specific difficulties for ASR: it is a tonal,
+monosyllabic language with six tone classes, limited publicly available
+training data, and pronounced regional dialect variation. Wav2Vec
+2.0~\cite{baevski2020wav2vec} demonstrated that self-supervised pre-training
+on unlabelled speech can significantly reduce the labelled data requirement
+for low-resource languages, including Vietnamese. The Zipformer
+architecture~\cite{yao2024zipformer} further improved parameter efficiency by
+processing speech at multiple temporal resolutions.
+
+PhoWhisper~\cite{le2024phowhisper}, developed by VinAI, fine-tunes the
+OpenAI Whisper encoder-decoder~\cite{radford2023whisper} on over 800 hours
+of multi-regional Vietnamese speech and achieves lower WER than
+Wav2Vec-based systems on conversational Vietnamese. VietASR~\cite{zhuo2025vietasr}
+combines a HuBERT~\cite{hsu2021hubert} encoder with a Zipformer decoder to
+maintain competitive accuracy while supporting real-time streaming. A
+limitation shared by both systems in the retail domain is that pre-training
+corpora do not cover the mixture of Vietnamese, English product names, and
+abbreviated trade terminology characteristic of spoken purchase orders.
+
+This work selects PhoWhisper-base as the acoustic transcription module and
+applies an LLM post-correction layer specifically targeted at known
+phonetic substitution patterns in retail speech (e.g., the substitution of
+homophonic loanwords for technical product names).
+
+\subsection{Zero-Shot Information Extraction via LLMs}
+
+Traditional named entity recognition (NER) systems trained on annotated
+corpora—such as BiLSTM-CRF models~\cite{lample2016neural}—require
+substantial labelled data per entity schema and do not generalise when new
+entity types or document layouts are introduced. Prompt-based extraction
+using LLMs bypasses this requirement: given a schema description and a few
+illustrative examples, models such as GPT-4 and Gemini can extract structured
+records from free-form text in a zero-shot or few-shot
+setting~\cite{reid2024gemini}.
+
+The practical constraint is throughput. Invoking a frontier LLM for each
+document in a high-volume pipeline produces per-document latency in the
+range of one to several seconds and incurs API costs that scale linearly with
+token count. Our architecture limits LLM invocation to two narrow functions—
+entity extraction from transcribed text and optional taxonomy prediction—
+rather than using it for end-to-end document processing, thereby bounding
+both latency and cost.
+
+\subsection{Hybrid Retrieval for Entity Resolution}
+
+Sparse retrieval with BM25~\cite{robertson2009probabilistic} provides fast,
+exact-match recall but fails on synonyms and abbreviations. Dense retrieval
+with sentence embeddings~\cite{reimers2019sentence} captures semantic
+similarity but can confuse closely related product specifications that differ
+only in a numeric attribute (e.g., \texttt{LED 8W} vs.\ \texttt{LED 9W}).
+Hybrid approaches that combine both signals through Reciprocal Rank
+Fusion~\cite{cormack2009reciprocal} have been shown to outperform either
+strategy in isolation on heterogeneous retrieval benchmarks.
+
+For Vietnamese product catalogs, which contain both semantically descriptive
+product names and opaque alphanumeric SKU codes, neither modality is
+universally preferable. We implement RRF as the primary fusion strategy within
+the Qdrant vector database~\cite{qdrant}, which supports parallel execution of
+dense and sparse retrieval in a single query. In addition, we evaluate two
+variants: (i) \emph{Weighted Score Fusion} (WSF), which applies min-max
+normalisation before a linear combination of scores with tunable weight
+$\alpha$, and (ii) \emph{Weighted RRF} (WRRF), which applies $\alpha$
+directly to the rank-based contributions, eliminating the normalisation
+requirement. The three strategies are compared empirically in
+Section~\ref{sec:experiments}.
+
+A further distinction from prior retrieval work is the optional
+taxonomy-guided filter applied before retrieval. By conditioning the vector
+search on an LLM-predicted product category label, the effective catalog size
+presented to the retrieval engine is reduced, lowering the risk of
+cross-category semantic collisions in large-scale catalogs.
