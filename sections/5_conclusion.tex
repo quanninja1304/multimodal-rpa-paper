@@ -1,3 +1,13 @@
 \section{Conclusion}
 
-This paper presented a novel approach for integrating multimodal AI into enterprise RPA workflows, addressing the challenges of accuracy, latency, and cost.
+We built a pipeline for extracting order data from Vietnamese invoices (images) and phone recordings (audio), then matching products to an enterprise catalog.
+
+The main ideas:
+\begin{itemize}
+    \item Use Gemini 2.5 Flash as a native multimodal model — no separate OCR or ASR.
+    \item Match products via hybrid search (Sentence-BERT + BM25) with LLM-based query normalization and category filtering.
+\end{itemize}
+
+\textbf{Limitations.} Small evaluation set. Depends on external LLM API (cost, latency, privacy). Only product matching is implemented — no merchant/buyer resolution yet. Rules are specific to one manufacturer.
+
+\textbf{Future work.} Add merchant matching. Fine-tune a smaller on-premise model. Add reranking. Test on more datasets.

@@ -1,3 +1,22 @@
 \section{Experiments and Results}
+\label{sec:experiments}
 
-We evaluate the performance of our proposed system on a dataset of enterprise documents and audio recordings.
+\subsection{Setup}
+
+\subsubsection{Data}
+\begin{itemize}
+    \item $\sim$100 invoice images + $\sim$50 audio recordings with manual annotations.
+    \item $\sim$50{,}000 product catalog (3-level hierarchy L1/L2/L3).
+\end{itemize}
+
+\subsubsection{System}
+Intel i9-12900, 16\,GB RAM, RTX 3090 Ti. Dense embeddings via \texttt{keepitreal/vietnamese-sbert} on GPU. Sparse embeddings via \texttt{Qdrant/bm25} (fastembed). LLM: Gemini 2.5 Flash API.
+
+\subsubsection{Baselines}
+\begin{enumerate}
+    \item Legacy rule-based (regex + fixed coordinates).
+    \item Separate OCR + LLM (no hybrid retrieval).
+    \item Two-stage: PhoWhisper~\cite{le2024phowhisper}/Whisper~\cite{radford2023whisper} ASR, then LLM extraction.
+\end{enumerate}
+
+% TODO: Define metrics, run experiments, add result tables.

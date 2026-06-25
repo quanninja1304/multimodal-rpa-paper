@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.13)  4 JUN 2026 20:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.13)  25 JUN 2026 08:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -676,94 +676,39 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 33.
  (c:/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) (./sections/1_introduction.tex
-
-LaTeX Warning: Citation `chuong2019robotic' on page 1 undefined on input line 16.
+) (./sections/1_introduction.tex) (./sections/2_related_work.tex) (./sections/3_methodology.tex [1{c:/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/texlive/2026/texmf-dist/fonts/enc/dvips/base/8r.enc}
 
 
-LaTeX Warning: Citation `reid2024gemini' on page 1 undefined on input line 25.
-
-
-LaTeX Warning: Citation `le2024phowhisper' on page 1 undefined on input line 29.
-
-
-LaTeX Warning: Citation `xu2020layoutlm' on page 1 undefined on input line 34.
-
-
-LaTeX Warning: Citation `le2024phowhisper' on page 1 undefined on input line 35.
-
-
-LaTeX Warning: Citation `zhuo2025vietasr' on page 1 undefined on input line 35.
-
-
-LaTeX Warning: Citation `reid2024gemini' on page 1 undefined on input line 36.
-
-
-LaTeX Warning: Citation `reimers2019sentence' on page 1 undefined on input line 37.
-
-
-LaTeX Warning: Citation `cormack2009reciprocal' on page 1 undefined on input line 37.
-
-
-LaTeX Warning: Citation `le2024phowhisper' on page 1 undefined on input line 48.
-
-
-Underfull \vbox (badness 1024) has occurred while \output is active []
-
- [1{c:/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/texlive/2026/texmf-dist/fonts/enc/dvips/base/8r.enc}
-
-
-]) (./sections/2_related_work.tex
-
-LaTeX Warning: Citation `xu2020layoutlm' on page 2 undefined on input line 14.
-
-
-LaTeX Warning: Citation `kim2022ocr' on page 2 undefined on input line 19.
-
-
-LaTeX Warning: Citation `baevski2020wav2vec' on page 2 undefined on input line 36.
-
-
-LaTeX Warning: Citation `yao2024zipformer' on page 2 undefined on input line 39.
-
-
-LaTeX Warning: Citation `le2024phowhisper' on page 2 undefined on input line 42.
-
-
-LaTeX Warning: Citation `radford2023whisper' on page 2 undefined on input line 43.
-
-
-LaTeX Warning: Citation `zhuo2025vietasr' on page 2 undefined on input line 45.
-
-
-LaTeX Warning: Citation `hsu2021hubert' on page 2 undefined on input line 46.
-
-
-LaTeX Warning: Citation `lample2016neural' on page 2 undefined on input line 60.
-
-
-LaTeX Warning: Citation `reid2024gemini' on page 2 undefined on input line 66.
-
-
-LaTeX Warning: Citation `robertson2009probabilistic' on page 2 undefined on input line 78.
-
-
-LaTeX Warning: Citation `reimers2019sentence' on page 2 undefined on input line 80.
-
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 82.
-(c:/texlive/2026/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+]
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 52.
+ (c:/texlive/2026/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-
-LaTeX Warning: Citation `cormack2009reciprocal' on page 2 undefined on input line 84.
-
-
-LaTeX Warning: Citation `qdrant' on page 2 undefined on input line 90.
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
+[]\OT1/ptm/b/n/10 Dense\OT1/ptm/m/n/10 : Viet-namese Sentence-BERT
+ []
 
 
-LaTeX Warning: Reference `sec:experiments' on page 2 undefined on input line 97.
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
+\OT1/ptm/m/n/10 (\OT1/pcr/m/n/10 keepitreal/vietnamese-sbert\OT1/ptm/m/n/10 , 768-dim,
+ []
 
-) (./sections/3_methodology.tex) (./sections/4_experiments.tex) (./sections/5_conclusion.tex) [2] (./main.bbl)
+) (./sections/4_experiments.tex
+Underfull \hbox (badness 10000) in paragraph at lines 13--14
+ \OT1/ptm/m/it/10 2) Sys-tem: [][][] \OT1/ptm/m/n/10 In-tel i9-12900, 16GB RAM,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--14
+\OT1/ptm/m/n/10 RTX 3090 Ti. Dense em-bed-dings via
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--14
+\OT1/pcr/m/n/10 keepitreal/vietnamese-sbert \OT1/ptm/m/n/10 on GPU. Sparse
+ []
+
+) (./sections/5_conclusion.tex) (./main.bbl [2])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -782,26 +727,22 @@ Before submitting the final camera ready copy, remember to:
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: C38772E2DD7DC6E7B007964B202930B8;1627.
+(rerunfilecheck)             Checksum: A49C35A65A3B1779492ED82439EE481B;2724.
  ) 
 Here is how much of TeX's memory you used:
- 24226 strings out of 467524
- 468491 string characters out of 5423188
- 902428 words of memory out of 5000000
- 52692 multiletter control sequences out of 15000+600000
- 665741 words of font info for 116 fonts, out of 8000000 for 9000
+ 24436 strings out of 467524
+ 472253 string characters out of 5423188
+ 902057 words of memory out of 5000000
+ 52858 multiletter control sequences out of 15000+600000
+ 672766 words of font info for 134 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,11n,94p,1614b,548s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (3 pages, 93623 bytes).
+ 84i,11n,94p,621b,754s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2026/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (3 pages, 161899 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
- 80 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
- 77 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 229 PDF objects out of 1000 (max. 8388607)
+ 196 compressed objects within 2 object streams
+ 50 named destinations out of 1000 (max. 500000)
+ 173 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,81 +1,18 @@
-% =============================================================
-%  SECTION 1 — INTRODUCTION  (revised)
-%  Target: ~1 page / ~500 words / 5 focused paragraphs
-%  All marketing language removed; contributions are defensible
-% =============================================================
 \section{Introduction}
 
-% --- P1: Real-world problem (concrete, specific) ---
-Enterprise procurement workflows in emerging markets generate document inputs
-that are predominantly unstructured: handwritten order slips, photographed
-receipts, and verbal purchase requests transmitted over phone or messaging
-applications. In the Vietnamese retail and distribution sector, this pattern is
-especially pronounced. A significant share of small and medium enterprises
-(SMEs) record transactions on paper invoices and communicate orders verbally,
-often mixing Vietnamese with English product terminology and regional
-abbreviations~\cite{chuong2019robotic}. Existing Robotic Process Automation
-(RPA) deployments handle these inputs through manual exception queues, which
-erode the efficiency gains that automation is intended to deliver.
+Many Vietnamese businesses still use handwritten invoices and phone calls to place orders. These inputs are hard to process automatically because they mix Vietnamese with English product names, use regional abbreviations, and come in different formats (images, audio).
 
-% --- P2: Technical challenge (precise, no hyperbole) ---
-Processing such inputs end-to-end with large language models (LLMs) is
-technically feasible but operationally impractical at scale. Invoking a
-multimodal LLM for every incoming document incurs per-token API costs and
-round-trip latency that, across the high transaction volumes typical of
-distribution centres, accumulate to prohibitive expense~\cite{reid2024gemini}.
-At the same time, lightweight rule-based pipelines fail on the lexical
-variability introduced by tonal Vietnamese, bilingual product names, and
-inconsistent abbreviation conventions (e.g., \textit{cty tnhh} for
-\textit{cong ty trach nhiem huu han})~\cite{le2024phowhisper}. Neither
-extreme satisfies the accuracy and throughput requirements of production RPA.
+Rule-based systems fail on this variety. Using a large language model (LLM) for every document works but costs too much at scale. Prior work has studied OCR, ASR, and retrieval separately, but no system combines them into one pipeline for Vietnamese enterprise data.
 
-% --- P3: Gap in existing literature ---
-Prior work on document information extraction has focused on English-language,
-high-resource settings~\cite{xu2020layoutlm} or on isolated components—ASR
-for Vietnamese~\cite{le2024phowhisper, zhuo2025vietasr}, entity extraction
-via LLM prompting~\cite{reid2024gemini}, and hybrid retrieval for product
-search~\cite{reimers2019sentence, cormack2009reciprocal}—without
-integrating these into a unified pipeline designed for enterprise-grade
-deployment constraints. No publicly available system addresses the combination
-of Vietnamese multimodal input, zero-shot entity extraction, and
-catalog-scale entity resolution under latency and cost budgets relevant to
-production RPA.
-
-% --- P4: Our solution (what, not ``novel'' or ``innovative'') ---
-This paper describes a modular, two-stage pipeline that separates
-\emph{signal transcription} from \emph{semantic extraction}. In Stage~1,
-modality-specific modules—a cloud OCR service for document images and
-PhoWhisper~\cite{le2024phowhisper} for spoken Vietnamese—convert raw inputs
-into a shared textual representation. In Stage~2, a single LLM performs
-zero-shot structured extraction of merchants, products, quantities, and units
-from the transcribed text. Extracted entities are then resolved against an
-enterprise catalog through a heterogeneous resolution layer: fuzzy string
-matching for merchant names and hybrid dense–sparse retrieval (Sentence-BERT +
-BM25, fused via Reciprocal Rank Fusion) for product SKUs, with an optional
-taxonomy-guided filter and a human-in-the-loop fallback for low-confidence
-cases.
-
-% --- P5: Contributions (defensible, scoped to what is actually done) ---
-The contributions of this paper are:
+We build a pipeline with two main parts:
 \begin{enumerate}
-    \item \textbf{System design}: A modular, eight-layer pipeline that
-    processes Vietnamese visual and acoustic business documents into
-    schema-compliant database records, with independent optimization of
-    the extraction and resolution components.
+    \item \textbf{Extraction}: Gemini 2.5 Flash processes raw image and audio files directly (no separate OCR or ASR step) and outputs structured JSON with seller, buyer, product, quantity, and date.
+    \item \textbf{Product matching}: Extracted product names are normalized by an LLM, classified into a category tree (L1/L2/L3), then matched against a catalog of $\sim$50k products using hybrid dense+sparse vector search in Qdrant.
+\end{enumerate}
 
-    \item \textbf{Heterogeneous entity resolution}: A domain-driven
-    resolution strategy that applies fuzzy lexical matching to merchant
-    names and hybrid dense–sparse retrieval to product descriptions,
-    motivated by the distinct error characteristics of each entity type.
-
-    \item \textbf{Empirical evaluation}: Measurements of extraction
-    accuracy (entity-level precision, recall, and F$_1$), product
-    retrieval performance (MRR@$K$, Hit@1), ASR word error rate, and
-    end-to-end throughput on a corpus of Vietnamese enterprise documents
-    and audio recordings, with ablations across retrieval fusion
-    strategies.
-
-    \item \textbf{Deployment analysis}: A cost and latency breakdown of
-    the modular architecture compared to an end-to-end LLM baseline,
-    informing practical deployment decisions for RPA integration.
+Our contributions:
+\begin{enumerate}
+    \item A pipeline that uses a native multimodal LLM for direct extraction from Vietnamese invoices and audio orders.
+    \item A product matching module combining LLM query normalization, category prediction, and hybrid retrieval (Sentence-BERT + learned BM25 via Weighted Score Fusion).
+    \item Evaluation on Vietnamese enterprise documents.
 \end{enumerate}

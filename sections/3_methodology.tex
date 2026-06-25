@@ -1,0 +1,91 @@
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Problem}
+
+Given a multimodal input $\mathcal{M} = (V, A)$ where $V$ is an image and $A$ is audio (either can be absent), the system does two things:
+\begin{equation}
+f_{IE}: \mathcal{M} \to \mathcal{E}, \quad f_{ER}: \mathcal{E} \to \mathcal{D}
+\end{equation}
+$f_{IE}$ extracts entities $\mathcal{E}$ (seller, buyer, product, quantity, date) from the input. $f_{ER}$ maps product names to canonical entries in the enterprise catalog $\mathcal{D}$.
+
+\subsection{Architecture}
+
+The pipeline has two stages (Fig.~\ref{fig:architecture}):
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rectangle, rounded corners, align=center,
+                minimum width=3cm, minimum height=0.7cm, font=\small},
+    arrow/.style={-Latex, thick},
+    dashedarrow/.style={-Latex, thick, dashed}
+]
+\node[box] (input) at (0, 0) {Input (ZIP)};
+\node[box] (router) at (0, -1.2) {Router (by file ext.)};
+\node[box] (img) at (-2.8, -2.5) {Images};
+\node[box] (aud) at (2.8, -2.5) {Audio};
+\node[box, minimum width=6.5cm] (llm) at (0, -4)
+    {Gemini 2.5 Flash — Extract ($f_{IE}$)};
+\node[box] (json) at (0, -5.2) {JSON entities $\mathcal{E}$};
+\node[box, minimum width=6.5cm] (er) at (0, -6.7)
+    {LLM Normalize + Hybrid Search ($f_{ER}$)};
+\node[box] (out) at (0, -8) {Catalog match $\mathcal{D}$};
+
+\draw[arrow] (input) -- (router);
+\draw[arrow] (router) -| (img);
+\draw[arrow] (router) -| (aud);
+\draw[arrow] (img) |- (llm);
+\draw[arrow] (aud) |- (llm);
+\draw[arrow] (llm) -- (json);
+\draw[arrow] (json) -- (er);
+\draw[arrow] (er) -- (out);
+\end{tikzpicture}
+\caption{Pipeline overview.}
+\label{fig:architecture}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Stage 1: Multimodal Extraction}
+
+We send raw file bytes (image or audio) directly to Gemini 2.5 Flash with a structured prompt. The model reads the image or listens to the audio natively — no separate OCR or ASR step. The output is a Pydantic-validated JSON with fields: \texttt{seller}, \texttt{buyer}, \texttt{product\_name}, \texttt{quantity}, \texttt{order\_date}.
+
+The prompt includes:
+\begin{itemize}
+    \item Target field definitions.
+    \item Phonetic correction rules for Vietnamese (e.g., ``ch\d{u}'' $\to$ ``tr\d{u}'' for LED products).
+    \item Rules to distinguish quantity columns from unit conversion columns in handwritten invoices.
+    \item Date normalization to \texttt{dd/mm/yyyy}.
+\end{itemize}
+
+Temperature is set to $T = 0.2$ with thinking disabled for speed.
+
+\subsection{Stage 2: Product Matching}
+
+Product names from Stage 1 are raw text that needs to be matched to the enterprise catalog ($\sim$50k SKUs). This is done in two steps.
+
+\subsubsection{Step 1: LLM Normalize + Classify}
+
+A second LLM call (Gemini 2.5 Flash, $T = 0.1$) processes each product name to:
+\begin{enumerate}
+    \item \textbf{Normalize}: Clean the query using domain rules — remove packaging suffixes (``1T'' = carton), strip price codes, fix abbreviations.
+    \item \textbf{Classify}: Predict the L1/L2/L3 category from the catalog taxonomy.
+\end{enumerate}
+
+Rules are stored in external markdown files (4 files, $\sim$22KB total). Queries are batched up to 10 per LLM call.
+
+\subsubsection{Step 2: Hybrid Vector Search}
+
+The normalized query is searched against Qdrant using two vector types in parallel:
+\begin{itemize}
+    \item \textbf{Dense}: Vietnamese Sentence-BERT (\texttt{keepitreal/vietnamese-sbert}, 768-dim, cosine).
+    \item \textbf{Sparse}: Learned BM25 via fastembed (\texttt{Qdrant/bm25}).
+\end{itemize}
+
+Each stream returns top-100 candidates. Scores are min-max normalized per stream, then combined:
+\begin{equation}
+\text{Score}(d) = 0.7 \cdot \hat{s}_{\text{dense}}(d) + 0.3 \cdot \hat{s}_{\text{sparse}}(d)
+\end{equation}
+
+If the LLM predicted a category, a \texttt{must} filter is applied on L1/L2/L3 metadata. If this returns no results, the system retries without the filter (automatic fallback).
